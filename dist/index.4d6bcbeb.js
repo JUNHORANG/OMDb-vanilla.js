@@ -708,17 +708,39 @@ exports.default = (0, _coreJs.createRouter)([
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
+var _headlineJs = require("../components/Headline.js");
+var _headlineJsDefault = parcelHelpers.interopDefault(_headlineJs);
 class Home extends (0, _coreJs.Component) {
-    constructor(){
-        super();
-    }
     render() {
-        this.el.innerHTML = /* html */ `
-    <h1>hello</h1>
-    `;
+        const headline = new (0, _headlineJsDefault.default)().el;
+        this.el.classList.add("container");
+        this.el.append(headline);
     }
 }
 exports.default = Home;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../components/Headline.js":"gaVgo"}],"gaVgo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+class Headline extends (0, _coreJs.Component) {
+    render() {
+        this.el.classList.add("headline");
+        this.el.innerHTML = /* html */ `
+    <h1>
+      <span>OMDb API</span><br>
+      THE OPEN<br>
+      MOVIE DATABASE
+    </h1>
+    <p>
+    The OMDb API is a RESTful web service to obtain movie information, 
+    all content and images on the site are contributed and maintained by our users.<br>
+    If you find this service useful, please consider making a one-time donation or become a patron.
+    </p>
+    `;
+    }
+}
+exports.default = Headline;
 
 },{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["e11Rl","gLLPy"], "gLLPy", "parcelRequire9091")
 
