@@ -710,16 +710,19 @@ parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
 var _headlineJs = require("../components/Headline.js");
 var _headlineJsDefault = parcelHelpers.interopDefault(_headlineJs);
+var _searchJs = require("../components/Search.js");
+var _searchJsDefault = parcelHelpers.interopDefault(_searchJs);
 class Home extends (0, _coreJs.Component) {
     render() {
         const headline = new (0, _headlineJsDefault.default)().el;
+        const search = new (0, _searchJsDefault.default)().el;
         this.el.classList.add("container");
-        this.el.append(headline);
+        this.el.append(headline, search);
     }
 }
 exports.default = Home;
 
-},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../components/Headline.js":"gaVgo"}],"gaVgo":[function(require,module,exports) {
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../components/Headline.js":"gaVgo","../components/Search.js":"jqPPz"}],"gaVgo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
@@ -741,6 +744,28 @@ class Headline extends (0, _coreJs.Component) {
     }
 }
 exports.default = Headline;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jqPPz":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+class Search extends (0, _coreJs.Component) {
+    render() {
+        this.el.classList.add("search");
+        this.el.innerHTML = /* html */ `
+    <input placeholder="Enter the movie title to search">
+    <button class="btn btn-primary">Searsh</button>
+    `;
+        const inputEl = this.el.querySelector("input");
+        const buttonEl = this.el.querySelector(".btn");
+        inputEl.addEventListener("input", ()=>{});
+        inputEl.addEventListener("keydown", (e)=>{
+            e.key;
+        });
+        buttonEl.addEventListener("click", ()=>{});
+    }
+}
+exports.default = Search;
 
 },{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["e11Rl","gLLPy"], "gLLPy", "parcelRequire9091")
 
