@@ -635,9 +635,9 @@ class Store {
         this.observers = {};
         for(const key in state)// 각 상태에 대한 변경 감시(Setter) 설정!
         Object.defineProperty(this.state, key, {
-            // Getter
+            // Getter : 데이터(state)를 읽을 때
             get: ()=>state[key],
-            // Setter
+            // Setter : 데이터(state)를 재할당 할 때
             set: (val)=>{
                 state[key] = val;
                 if (Array.isArray(this.observers[key])) // 호출할 콜백이 있는 경우!
@@ -712,17 +712,23 @@ var _headlineJs = require("../components/Headline.js");
 var _headlineJsDefault = parcelHelpers.interopDefault(_headlineJs);
 var _searchJs = require("../components/Search.js");
 var _searchJsDefault = parcelHelpers.interopDefault(_searchJs);
+var _movieListJs = require("../components/MovieList.js");
+var _movieListJsDefault = parcelHelpers.interopDefault(_movieListJs);
+var _movieListMoreJs = require("../components/MovieListMore.js");
+var _movieListMoreJsDefault = parcelHelpers.interopDefault(_movieListMoreJs);
 class Home extends (0, _coreJs.Component) {
     render() {
         const headline = new (0, _headlineJsDefault.default)().el;
         const search = new (0, _searchJsDefault.default)().el;
+        const movieList = new (0, _movieListJsDefault.default)().el;
+        const movieListMore = new (0, _movieListMoreJsDefault.default)().el;
         this.el.classList.add("container");
-        this.el.append(headline, search);
+        this.el.append(headline, search, movieList, movieListMore);
     }
 }
 exports.default = Home;
 
-},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../components/Headline.js":"gaVgo","../components/Search.js":"jqPPz"}],"gaVgo":[function(require,module,exports) {
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../components/Headline.js":"gaVgo","../components/Search.js":"jqPPz","../components/MovieList.js":"8UDl3","../components/MovieListMore.js":"3ZUar"}],"gaVgo":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
@@ -749,6 +755,8 @@ exports.default = Headline;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
+var _movieJs = require("../store/movie.js");
+var _movieJsDefault = parcelHelpers.interopDefault(_movieJs);
 class Search extends (0, _coreJs.Component) {
     render() {
         this.el.classList.add("search");
@@ -758,15 +766,147 @@ class Search extends (0, _coreJs.Component) {
     `;
         const inputEl = this.el.querySelector("input");
         const buttonEl = this.el.querySelector(".btn");
-        inputEl.addEventListener("input", ()=>{});
-        inputEl.addEventListener("keydown", (e)=>{
-            e.key;
+        inputEl.addEventListener("input", ()=>{
+            (0, _movieJsDefault.default).state.searchText = inputEl.value;
         });
-        buttonEl.addEventListener("click", ()=>{});
+        inputEl.addEventListener("keydown", (e)=>{
+            if (e.key === "Enter" && (0, _movieJsDefault.default).state.searchText.trim()) (0, _movieJs.searchMovies)(1);
+        });
+        buttonEl.addEventListener("click", ()=>{
+            if ((0, _movieJsDefault.default).state.searchText.trim()) (0, _movieJs.searchMovies)(1);
+        });
     }
 }
 exports.default = Search;
 
-},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["e11Rl","gLLPy"], "gLLPy", "parcelRequire9091")
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../store/movie.js":"kq1bo"}],"kq1bo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "searchMovies", ()=>searchMovies);
+var _coreJs = require("../core/core.js");
+const store = new (0, _coreJs.Store)({
+    searchText: "",
+    page: 1,
+    pageMax: 1,
+    movies: [],
+    loading: false,
+    message: "Search for the Title"
+});
+exports.default = store;
+const searchMovies = async (page)=>{
+    store.state.loading = true;
+    store.state.page = page;
+    if (page === 1) {
+        store.state.movies = [];
+        store.state.message = "";
+    }
+    try {
+        const res = await fetch(`https://www.omdbapi.com/?apikey=7035c60c&s=${store.state.searchText}&page=${page}`);
+        const { Search , totalResults , Response , Error  } = await res.json();
+        if (Response === "True") {
+            store.state.movies = [
+                ...store.state.movies,
+                ...Search
+            ];
+            store.state.pageMax = Math.ceil(Number(totalResults) / 10);
+        } else store.state.message = Error;
+    } catch (err) {
+        console.log("searchMovies error:", err);
+    } finally{
+        store.state.loading = false;
+    }
+};
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8UDl3":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+var _movieJs = require("../store/movie.js");
+var _movieJsDefault = parcelHelpers.interopDefault(_movieJs);
+var _movieItemJs = require("./MovieItem.js");
+var _movieItemJsDefault = parcelHelpers.interopDefault(_movieItemJs);
+class MovieList extends (0, _coreJs.Component) {
+    constructor(){
+        super();
+        (0, _movieJsDefault.default).subscribe("movies", ()=>{
+            this.render();
+        });
+        (0, _movieJsDefault.default).subscribe("loading", ()=>{
+            this.render();
+        });
+        (0, _movieJsDefault.default).subscribe("message", ()=>{
+            this.render();
+        });
+    }
+    render() {
+        this.el.classList.add("movie-list");
+        this.el.innerHTML = /* html */ `
+    ${(0, _movieJsDefault.default).state.message ? `<div class="message"> ${(0, _movieJsDefault.default).state.message}</div>` : '<div class="movies"></div>'}
+    <div class="the-loader hide"></div>
+    `;
+        const moviesEl = this.el.querySelector(".movies");
+        const loaderEl = this.el.querySelector(".the-loader");
+        moviesEl?.append(...(0, _movieJsDefault.default).state.movies.map((movie)=>new (0, _movieItemJsDefault.default)({
+                movie
+            }).el));
+        (0, _movieJsDefault.default).state.loading ? loaderEl.classList.remove("hide") : loaderEl.classList.add("hide");
+    }
+}
+exports.default = MovieList;
+
+},{"../core/core.js":"3SuZC","../store/movie.js":"kq1bo","./MovieItem.js":"fAzE8","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fAzE8":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+class MovieItem extends (0, _coreJs.Component) {
+    constructor(props){
+        super({
+            props,
+            tagName: "a"
+        });
+    }
+    render() {
+        const { movie  } = this.props;
+        this.el.setAttribute("href", `#/movie?id=${movie.imdID}`);
+        this.el.classList.add("movie");
+        this.el.style.backgroundImage = `url(${movie.Poster})`;
+        this.el.innerHTML = /* html */ `
+    <div class="info">
+      <div class="year">${movie.Year}</div>
+      <div class="title">${movie.Title}</div>
+    </div>
+    `;
+    }
+}
+exports.default = MovieItem;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3ZUar":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+var _movieJs = require("../store/movie.js");
+var _movieJsDefault = parcelHelpers.interopDefault(_movieJs);
+class MovieListMore extends (0, _coreJs.Component) {
+    constructor(){
+        super({
+            tagName: "button"
+        });
+        (0, _movieJsDefault.default).subscribe("pageMax", ()=>{
+            const { page , pageMax  } = (0, _movieJsDefault.default).state;
+            pageMax > page ? this.el.classList.remove("hide") : this.el.classList.add("hide");
+        });
+    }
+    render() {
+        this.el.classList.add("btn", "view-more", "hide");
+        this.el.textContent = "View More";
+        this.el.addEventListener("click", async ()=>{
+            this.el.classList.add("hide");
+            await (0, _movieJs.searchMovies)((0, _movieJsDefault.default).state.page + 1);
+        });
+    }
+}
+exports.default = MovieListMore;
+
+},{"../core/core.js":"3SuZC","../store/movie.js":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["e11Rl","gLLPy"], "gLLPy", "parcelRequire9091")
 
 //# sourceMappingURL=index.4d6bcbeb.js.map

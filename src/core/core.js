@@ -63,9 +63,9 @@ export class Store {
     for (const key in state) {
       // 각 상태에 대한 변경 감시(Setter) 설정!
       Object.defineProperty(this.state, key, {
-        // Getter
+        // Getter : 데이터(state)를 읽을 때
         get: () => state[key],
-        // Setter
+        // Setter : 데이터(state)를 재할당 할 때
         set: (val) => {
           state[key] = val;
           if (Array.isArray(this.observers[key])) {
@@ -76,6 +76,7 @@ export class Store {
       });
     }
   }
+
   // 상태 변경 구독!
   subscribe(key, cb) {
     Array.isArray(this.observers[key]) // 이미 등록된 콜백이 있는지 확인!
