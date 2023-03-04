@@ -570,15 +570,21 @@ root.append(new (0, _appJsDefault.default)().el);
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../src/core/core.js");
+var _theHeaderJs = require("./components/TheHeader.js");
+var _theHeaderJsDefault = parcelHelpers.interopDefault(_theHeaderJs);
+var _theFooterJs = require("./components/TheFooter.js");
+var _theFooterJsDefault = parcelHelpers.interopDefault(_theFooterJs);
 class App extends (0, _coreJs.Component) {
     render() {
+        const theHeader = new (0, _theHeaderJsDefault.default)().el;
+        const theFooter = new (0, _theFooterJsDefault.default)().el;
         const routerView = document.createElement("router-View");
-        this.el.append(routerView);
+        this.el.append(theHeader, routerView, theFooter);
     }
 }
 exports.default = App;
 
-},{"../src/core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3SuZC":[function(require,module,exports) {
+},{"../src/core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./components/TheHeader.js":"3Cyq4","./components/TheFooter.js":"b3x3c"}],"3SuZC":[function(require,module,exports) {
 ///// Component /////
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -691,20 +697,121 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"3L9mC":[function(require,module,exports) {
+},{}],"3Cyq4":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+class TheHeader extends (0, _coreJs.Component) {
+    constructor(){
+        super({
+            tagName: "header",
+            state: {
+                menus: [
+                    {
+                        name: "Search",
+                        href: "#/"
+                    },
+                    {
+                        name: "Movie",
+                        href: "#/movie?id=tt4520988"
+                    },
+                    {
+                        name: "About",
+                        href: "#/about"
+                    }
+                ]
+            }
+        });
+        window.addEventListener("popstate", ()=>{
+            this.render();
+        });
+    }
+    render() {
+        this.el.innerHTML = /* html */ `  
+    <a href="#/" class="logo">
+      <span>OMDbAPI</span>.COM
+    </a>
+    <nav>
+      <ul>
+        ${this.state.menus.map((menu)=>{
+            const href = menu.href.split("?")[0];
+            const hash = location.hash.split("?")[0];
+            const isActive = href === hash;
+            return /* html */ `
+            <li>
+              <a class="${isActive ? "active" : ""}" href=${menu.href}>
+                ${menu.name}
+              </a>
+            </li>
+            `;
+        }).join("")}
+      </ul>
+    </nav>
+    <a href="#/about" class="user">
+      <img src="https://heropy.blog/css/images/logo.png" alt="User">
+    </a>
+  `;
+    }
+}
+exports.default = TheHeader;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b3x3c":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+class TheFooter extends (0, _coreJs.Component) {
+    constructor(){
+        super({
+            tagName: "footer"
+        });
+    }
+    render() {
+        this.el.innerHTML = /* html */ `
+    <div>
+      <a href="https://github.com/JUNHORANG/OMDb-vanillaJs">GitHub Repository
+    </div>
+    <div>
+      <a href="https://github.com/JUNHORANG">
+        ${new Date().getFullYear()} JUNHO
+      </a>
+    </div>
+    `;
+    }
+}
+exports.default = TheFooter;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3L9mC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
 var _homeJs = require("./Home.js");
 var _homeJsDefault = parcelHelpers.interopDefault(_homeJs);
+var _movieJs = require("./Movie.js");
+var _movieJsDefault = parcelHelpers.interopDefault(_movieJs);
+var _aboutJs = require("./About.js");
+var _aboutJsDefault = parcelHelpers.interopDefault(_aboutJs);
+var _notFoundJs = require("./NotFound.js");
+var _notFoundJsDefault = parcelHelpers.interopDefault(_notFoundJs);
 exports.default = (0, _coreJs.createRouter)([
     {
         path: "#/",
         component: (0, _homeJsDefault.default)
+    },
+    {
+        path: "#/movie",
+        component: (0, _movieJsDefault.default)
+    },
+    {
+        path: "#/about",
+        component: (0, _aboutJsDefault.default)
+    },
+    {
+        path: ".*",
+        component: (0, _notFoundJsDefault.default)
     }
 ]);
 
-},{"../core/core.js":"3SuZC","./Home.js":"0JSNG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"0JSNG":[function(require,module,exports) {
+},{"../core/core.js":"3SuZC","./Home.js":"0JSNG","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./Movie.js":"1LTyN","./About.js":"gdB30","./NotFound.js":"4fDiL"}],"0JSNG":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _coreJs = require("../core/core.js");
@@ -761,7 +868,8 @@ class Search extends (0, _coreJs.Component) {
     render() {
         this.el.classList.add("search");
         this.el.innerHTML = /* html */ `
-    <input placeholder="Enter the movie title to search">
+    <input 
+    placeholder="Enter the movie title to search">
     <button class="btn btn-primary">Searsh</button>
     `;
         const inputEl = this.el.querySelector("input");
@@ -783,12 +891,14 @@ exports.default = Search;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "searchMovies", ()=>searchMovies);
+parcelHelpers.export(exports, "getMovieDetails", ()=>getMovieDetails);
 var _coreJs = require("../core/core.js");
 const store = new (0, _coreJs.Store)({
     searchText: "",
     page: 1,
     pageMax: 1,
     movies: [],
+    movie: {},
     loading: false,
     message: "Search for the Title"
 });
@@ -814,6 +924,14 @@ const searchMovies = async (page)=>{
         console.log("searchMovies error:", err);
     } finally{
         store.state.loading = false;
+    }
+};
+const getMovieDetails = async (id)=>{
+    try {
+        const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${id}&plot=full`);
+        store.state.movie = await res.json();
+    } catch (err) {
+        console.log("getMovieDetails error", err);
     }
 };
 
@@ -846,9 +964,11 @@ class MovieList extends (0, _coreJs.Component) {
     `;
         const moviesEl = this.el.querySelector(".movies");
         const loaderEl = this.el.querySelector(".the-loader");
-        moviesEl?.append(...(0, _movieJsDefault.default).state.movies.map((movie)=>new (0, _movieItemJsDefault.default)({
+        moviesEl?.append(...(0, _movieJsDefault.default).state.movies.map((movie)=>{
+            return new (0, _movieItemJsDefault.default)({
                 movie
-            }).el));
+            }).el;
+        }));
         (0, _movieJsDefault.default).state.loading ? loaderEl.classList.remove("hide") : loaderEl.classList.add("hide");
     }
 }
@@ -867,7 +987,7 @@ class MovieItem extends (0, _coreJs.Component) {
     }
     render() {
         const { movie  } = this.props;
-        this.el.setAttribute("href", `#/movie?id=${movie.imdID}`);
+        this.el.setAttribute("href", `#/movie?id=${movie.imdbID}`);
         this.el.classList.add("movie");
         this.el.style.backgroundImage = `url(${movie.Poster})`;
         this.el.innerHTML = /* html */ `
@@ -907,6 +1027,129 @@ class MovieListMore extends (0, _coreJs.Component) {
 }
 exports.default = MovieListMore;
 
-},{"../core/core.js":"3SuZC","../store/movie.js":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["e11Rl","gLLPy"], "gLLPy", "parcelRequire9091")
+},{"../core/core.js":"3SuZC","../store/movie.js":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1LTyN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+var _movieJs = require("../store/movie.js");
+var _movieJsDefault = parcelHelpers.interopDefault(_movieJs);
+class Movie extends (0, _coreJs.Component) {
+    async render() {
+        this.el.classList.add("container", "the-movie");
+        this.el.innerHTML = /* html */ `
+    <div class="poster skeleton"></div>
+    <div class="specs">
+      <div class="title skeleton"></div>
+      <div class="labels skeleton"></div>
+      <div class="plot skeleton"></div>
+    </div>
+    `;
+        await (0, _movieJs.getMovieDetails)(history.state.id);
+        const { movie  } = (0, _movieJsDefault.default).state;
+        const birPoster = movie.Poster.replace("SX300", "SX700");
+        let ratings = movie.Ratings.map((rating)=>{
+            const value = [];
+            for(const key in rating)value.push(rating[key]);
+            return `<p>${value.join(" - ")}</p>`;
+        });
+        this.el.innerHTML = /*html*/ `
+    <div
+    style="background-image:url(${birPoster})"
+    class="poster"></div>
+    <div class="specs">
+      <div class="title">${movie.Title}</div>
+      <div class="labels">
+        <span>${movie.Released}</span>
+        &nbsp;/&nbsp;
+        <span>${movie.Runtime}</span>
+        &nbsp;/&nbsp;
+        <span>${movie.Country}</span>
+      </div>
+      <div class="plot">${movie.Plot}</div>
+      <div>
+        <h3>Ratings</h3>
+        ${ratings.join("")}
+      </div>
+      <div>
+        <h3>Actors</h3>
+        <p>${movie.Actors}</p>
+      </div>
+      <div>
+        <h3>Director</h3>
+        <p>${movie.Director}</p>
+      </div>
+      <div>
+        <h3>Production</h3>
+        <p>${movie.Production}</p>
+      </div>
+      <div>
+        <h3>Genre</h3>
+        <p>${movie.Genre}</p>
+      </div>
+    </div>
+    `;
+    }
+}
+exports.default = Movie;
+
+},{"../core/core.js":"3SuZC","../store/movie.js":"kq1bo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gdB30":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+var _aboutJs = require("../store/about.js");
+var _aboutJsDefault = parcelHelpers.interopDefault(_aboutJs);
+class About extends (0, _coreJs.Component) {
+    render() {
+        const { photo , name , email , github  } = (0, _aboutJsDefault.default).state;
+        this.el.classList.add("container", "about");
+        this.el.innerHTML = /* html */ `
+    <div 
+    style="background-image:url(${photo})"
+    class="photo"></div>
+    <p class="name">${name}</p>
+    <p>
+      <a 
+      href="https://mail.google.com/mail/?view=cm&fs=1&to=${email}" 
+      target="_blank">
+        ${email}
+      </a>
+    </p>
+    <p>
+      <a href="${github}" target="_blank">GitHub</a>
+    </p>
+    `;
+    }
+}
+exports.default = About;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../store/about.js":"4RAJO"}],"4RAJO":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+exports.default = new (0, _coreJs.Store)({
+    photo: "https://heropy.blog/css/images/logo.png",
+    name: "JUNHORANG / LEE JUN HO",
+    email: "sjsk3358@naver.com",
+    github: "https://github.com/JUNHORANG"
+});
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../core/core.js":"3SuZC"}],"4fDiL":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _coreJs = require("../core/core.js");
+class NotFound extends (0, _coreJs.Component) {
+    render() {
+        this.el.classList.add("container", "not-found");
+        this.el.innerHTML = /* html */ `
+    <h1>
+      Sorry..<br>
+      Page Not Found
+    </h1>
+    `;
+    }
+}
+exports.default = NotFound;
+
+},{"../core/core.js":"3SuZC","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["e11Rl","gLLPy"], "gLLPy", "parcelRequire9091")
 
 //# sourceMappingURL=index.4d6bcbeb.js.map
