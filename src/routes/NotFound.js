@@ -7,7 +7,7 @@ export default class NotFound extends Component {
     <h1>
       Sorry..<br>
       Page Not Found
-    </h1>zzz
+    </h1>
     `;
   }
 }
